@@ -13,7 +13,7 @@ main_font_size = 14
 file = ''
 save_directory = ''
 files = []
-
+#Hello
 # It opens a file and adds it to the list of files to be copied
 def open_file_to_back_up(root):
     global file
