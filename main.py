@@ -6,8 +6,13 @@ from back_up_actions import BackUp
 
 home_directory = os.path.expanduser('~')
 
+
 main_font = "Helvetica"
 main_font_size = 14
+
+Back_Up_Action = BackUp()
+File_Transactions = FileTransaction()
+
 
 def main():
     root = tk.Tk()
@@ -29,30 +34,34 @@ def main():
     except:
         pass
     """"""
-    Back_Up_Action = BackUp()
 
-    # Gets the file after choosing by pressing the button
-    file_path_btn = tk.Button(root, text="Open File",
-                              command=lambda:
-                              Back_Up_Action.get_file_address(root, home_directory)
-                              )
-    file_path_btn.pack()
+    files_list = File_Transactions.get_file_list()
+    text_box = tk.Text(height=10)
+    for line in files_list:
+        text_box.insert(tk.END, f'{line}\n')
 
-    # Gets the target directory to back up files
-    directory_path = tk.Button(root,
-                               text="Choose a Back Up Directory",
-                               command=lambda:
-                               Back_Up_Action.get_directory_address(root, home_directory)
-                               )
-    directory_path.pack()
+    open_file_btn(root, text_box)
+    back_up_directory_btn(root)
+    back_up_btn(root)
+    text_box.pack()
 
-    # Back up files
-    back_up_btn = tk.Button(root,
-                            text="Back Up Files",
-                            command=Back_Up_Action.back_up
-                            )
-    back_up_btn.pack()
 
     root.mainloop()
+
+
+def open_file_btn(root, text_box):
+    file_path_btn = tk.Button(root, text="Open File",
+                              command= lambda: Back_Up_Action.get_file_address(root, home_directory, text_box))
+    file_path_btn.pack()
+
+def back_up_directory_btn(root):
+    directory_path = tk.Button(root, text="Choose a Back Up Directory",
+                               command=lambda: Back_Up_Action.get_directory_address(root, home_directory))
+    directory_path.pack()
+
+def back_up_btn(root):
+    back_up = tk.Button(root, text="Back Up Files", command=Back_Up_Action.back_up)
+    back_up.pack()
+
 main()
 
