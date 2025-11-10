@@ -7,7 +7,6 @@ from file_transactions import FileTransaction
 
 File_Transaction = FileTransaction()
 
-
 class BackUp:
     def __init__(self):
         self.file = ''

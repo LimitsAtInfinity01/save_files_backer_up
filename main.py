@@ -4,6 +4,9 @@ import tkinter as tk
 from file_transactions import FileTransaction
 from back_up_actions import BackUp
 
+from showinfm import show_in_file_manager
+
+
 home_directory = os.path.expanduser('~')
 
 
@@ -43,6 +46,7 @@ def main():
     open_file_btn(root, text_box)
     back_up_directory_btn(root)
     back_up_btn(root)
+    open_back_up_directory(root)
     text_box.pack()
 
 
@@ -62,6 +66,14 @@ def back_up_directory_btn(root):
 def back_up_btn(root):
     back_up = tk.Button(root, text="Back Up Files", command=Back_Up_Action.back_up)
     back_up.pack()
+
+
+def open_back_up_directory(root):
+    directory = File_Transactions.get_directory()
+    btn = tk.Button(root, text="Open back up folder", command=lambda: show_in_file_manager(directory))
+    btn.pack()
+
+
 
 main()
 
