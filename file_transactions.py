@@ -1,39 +1,51 @@
+import os
 import datetime
+import json
+
 
 class FileTransaction:
     def __init__(self):
-        self.file_list = []
         self.directory = ''
-        self.file_dict = {}
+        self.data = {}
+        self.current_files = None
 
     def update_file_list(self, file):
-        if file not in self.file_list:
-            self.file_list.append(file)
+        created_at = datetime.datetime.now()
+        current_files = None
+        self.data = {
+            "files":
+            [
+                {
+                "file_path": file,
+                "date_created": created_at.date()
+                }
+            ]
+        }
+        # read the JSON and load current files
+        if os.path.getsize('file_json.json') != 0: # checks if file empty
+            with open('file_json.json', 'r') as current_json:
+                current_files = json.load(current_json)
+                current_files["files"].append({
+                    "file_path": file,
+                    "date_created": created_at.date()
+                })
+            with open("file_json.json", "w") as json_file:
+                json.dump(current_files, json_file, indent=4, default=str)
+        else:
+            # creates JSON
+            with open("file_json.json", "w") as json_file:
+                json.dump(self.data, json_file, indent=4, default=str)
+                self.current_files = self.data
 
-            created_at = datetime.datetime.now()
-            self.file_dict['file_path'] = file
-            self.file_dict['date_created'] = created_at
-
-        print(self.get_dict_file())
-        current_files = []
-        with open('files_paths.txt', 'r') as r:
-            for line in r:
-                current_files.append(line.strip())
-
-        with open('files_paths.txt', 'a') as f:
-            for file in self.file_list:
-                if file not in current_files:
-                    f.write(f"{file}\n")
-
-    def get_dict_file(self):
-        return self.file_dict
-
-
-    def get_file_list(self):
-        with open('files_paths.txt', 'r') as f:
-            for line in f:
-                self.file_list.append(line.strip())
-        return self.file_list
+    @staticmethod
+    def get_file_list():
+        data = []
+        if os.path.getsize('file_json.json') != 0:
+            with open("file_json.json", 'r') as file:
+                data = json.load(file)
+                return data
+        else:
+            return data
 
     def update_directory(self, directory):
         self.directory = directory
@@ -46,4 +58,10 @@ class FileTransaction:
             if directory != '':
                 self.directory = directory
         return self.directory
+
+    @staticmethod
+    def backed_up_files(file):
+        with open('backed_up_files.txt', 'a') as f:
+            f.write(file)
+
 
